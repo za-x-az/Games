@@ -782,5 +782,84 @@
         loadPuzzle('neon-arcade', 'medium');
     })();
 </script>
+<script>
+    // ... (keep all your existing game logic)
+
+    // NEW: move recording
+    let currentMoves = [];  // array of { src, dst }
+
+    // Modify performMove to record
+    const originalPerformMove = performMove;
+    performMove = function(src, dst) {
+        const result = originalPerformMove(src, dst);
+        if (result) {
+            currentMoves.push({ src, dst });
+        }
+        return result;
+    };
+
+    // Modify restart / new puzzle to clear moves
+    const originalRestart = restartPuzzle;
+    restartPuzzle = function() {
+        originalRestart();
+        currentMoves = [];
+    };
+    const originalLoadPuzzle = loadPuzzle;
+    loadPuzzle = function(seed, diff) {
+        originalLoadPuzzle(seed, diff);
+        currentMoves = [];
+    };
+
+    // After win, show name prompt & submit
+    const API_BASE = 'https://your-backend-url.com'; // << CHANGE THIS
+    async function submitScore(name) {
+        const payload = {
+            seed: currentSeed,
+            difficulty: currentDifficulty,
+            playerName: name,
+            moves: currentMoves
+        };
+        try {
+            const res = await fetch(`${API_BASE}/api/submit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('Score submitted!');
+                fetchLeaderboard();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        } catch(e) {
+            alert('Network error');
+        }
+    }
+
+    async function fetchLeaderboard() {
+        try {
+            const res = await fetch(`${API_BASE}/api/leaderboard?difficulty=${currentDifficulty}`);
+            const data = await res.json();
+            // display leaderboard in a modal (implement your own UI)
+            console.log('Leaderboard:', data);
+        } catch(e) {}
+    }
+
+    // Override win detection to prompt name
+    const originalCheckWin = checkWinAndShow;
+    checkWinAndShow = function() {
+        originalCheckWin();
+        if (isWinState(tubes)) {
+            // Delay to let overlay show
+            setTimeout(() => {
+                const name = prompt('Congratulations! Enter your name for the leaderboard:');
+                if (name) submitScore(name.trim());
+            }, 500);
+        }
+    };
+
+    // Optional: add a "Leaderboard" button in UI
+</script>
 </body>
 </html>
