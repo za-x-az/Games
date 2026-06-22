@@ -23,7 +23,7 @@
             background-image:
                 linear-gradient(rgba(0, 255, 255, 0.15) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 255, 255, 0.15) 1px, transparent 1px);
-            background-size: 40px 40px;
+            background-size: 60px 60px;               /* 1.5x */
             animation: gridPulse 2s ease-in-out infinite alternate;
             color: #fff;
             font-family: 'Orbitron', sans-serif;
@@ -31,27 +31,27 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 30px;
             margin: 0;
         }
 
         @keyframes gridPulse {
-            0% { background-size: 40px 40px; opacity: 0.8; }
-            100% { background-size: 42px 42px; opacity: 1; }
+            0% { background-size: 60px 60px; opacity: 0.8; }
+            100% { background-size: 63px 63px; opacity: 1; }
         }
 
         .game-container {
             width: 100%;
-            max-width: 660px;
+            max-width: 900px;                          /* 1.5x original 660 */
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(30px);
             border: 2px solid rgba(0, 255, 255, 0.5);
-            border-radius: 30px;
-            padding: 25px;
+            border-radius: 45px;
+            padding: 35px;
             box-shadow:
-                0 0 40px rgba(0, 255, 255, 0.4),
-                0 0 80px rgba(255, 0, 255, 0.3),
-                inset 0 0 40px rgba(0, 255, 255, 0.1);
+                0 0 60px rgba(0, 255, 255, 0.4),
+                0 0 120px rgba(255, 0, 255, 0.3),
+                inset 0 0 60px rgba(0, 255, 255, 0.1);
             position: relative;
             z-index: 1;
         }
@@ -61,25 +61,25 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            margin-bottom: 20px;
-            gap: 15px;
+            margin-bottom: 30px;
+            gap: 20px;
         }
 
         .move-counter {
-            font-size: 1.3rem;
+            font-size: 1.8rem;                        /* 1.5x */
             font-weight: 700;
             background: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
-            border-radius: 40px;
+            padding: 15px 30px;
+            border-radius: 60px;
             border: 1px solid var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-            text-shadow: 0 0 8px var(--neon-cyan);
-            letter-spacing: 2px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            text-shadow: 0 0 12px var(--neon-cyan);
+            letter-spacing: 3px;
         }
 
         .buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             flex-wrap: wrap;
         }
 
@@ -87,15 +87,15 @@
             background: rgba(0, 0, 0, 0.7);
             border: 1px solid var(--neon-magenta);
             color: #fff;
-            padding: 10px 18px;
-            border-radius: 30px;
+            padding: 14px 25px;                        /* 1.5x */
+            border-radius: 45px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
+            font-size: 1.1rem;                         /* 1.5x */
+            letter-spacing: 1.5px;
             text-transform: uppercase;
-            box-shadow: 0 0 12px rgba(255, 0, 255, 0.4);
+            box-shadow: 0 0 18px rgba(255, 0, 255, 0.4);
             backdrop-filter: blur(10px);
             font-family: 'Orbitron', sans-serif;
         }
@@ -103,10 +103,9 @@
         button:hover {
             background: rgba(255, 0, 255, 0.3);
             border-color: var(--neon-cyan);
-            box-shadow: 0 0 25px var(--neon-cyan), 0 0 50px var(--neon-magenta);
-            transform: translateY(-2px);
-            color: #fff;
-            text-shadow: 0 0 5px #fff;
+            box-shadow: 0 0 35px var(--neon-cyan), 0 0 70px var(--neon-magenta);
+            transform: translateY(-3px);
+            text-shadow: 0 0 8px #fff;
         }
 
         button.primary-cta {
@@ -114,41 +113,42 @@
             border-color: var(--neon-magenta);
             color: #000;
             text-shadow: none;
-            box-shadow: 0 0 30px var(--neon-magenta);
+            box-shadow: 0 0 45px var(--neon-magenta);
         }
 
         button.primary-cta:hover {
             background: var(--neon-cyan);
             border-color: var(--neon-cyan);
-            box-shadow: 0 0 40px var(--neon-cyan);
+            box-shadow: 0 0 60px var(--neon-cyan);
             color: #000;
         }
 
+        /* ── Tube grid (1.5x spacing) ── */
         .tube-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin: 25px 0;
+            gap: 25px;
+            margin: 35px 0;
             justify-items: center;
         }
 
+        /* ── Tubes now uniformly rounded (capsules) ── */
         .tube {
-            width: 75px;
+            width: 105px;                              /* 1.5x of 70 → 105, but slots are wider so adjust */
             background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(20px);
-            border-radius: 0 0 30px 30px;
-            padding: 15px 0 12px;
+            border-radius: 45px;                       /* fully rounded */
+            padding: 22px 10px 18px;                   /* enough for wide slots */
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 8px;
             cursor: pointer;
             border: 2px solid rgba(0, 255, 255, 0.5);
-            border-top: 2px solid rgba(0, 255, 255, 0.8);
             transition: all 0.2s ease;
             box-shadow:
-                0 0 20px rgba(0, 255, 255, 0.3),
-                inset 0 0 15px rgba(0, 255, 255, 0.1);
+                0 0 30px rgba(0, 255, 255, 0.3),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
             position: relative;
             overflow: visible;
         }
@@ -157,7 +157,7 @@
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: inherit;
+            border-radius: 45px;
             background: linear-gradient(180deg,
                     rgba(0,255,255,0.15) 0%,
                     rgba(255,0,255,0.1) 50%,
@@ -168,20 +168,15 @@
 
         .tube:hover {
             border-color: var(--neon-cyan);
-            box-shadow:
-                0 0 35px var(--neon-cyan),
-                inset 0 0 20px rgba(0, 255, 255, 0.2);
-            transform: translateY(-4px);
+            box-shadow: 0 0 50px var(--neon-cyan), inset 0 0 30px rgba(0,255,255,0.2);
+            transform: translateY(-6px);
         }
 
         .tube.selected {
             border-color: var(--neon-magenta);
             background: rgba(255, 0, 255, 0.2);
-            box-shadow:
-                0 0 40px var(--neon-magenta),
-                0 0 80px rgba(255, 0, 255, 0.5),
-                inset 0 0 25px rgba(255, 0, 255, 0.3);
-            transform: translateY(-6px);
+            box-shadow: 0 0 60px var(--neon-magenta), 0 0 120px rgba(255,0,255,0.5), inset 0 0 35px rgba(255,0,255,0.3);
+            transform: translateY(-8px);
         }
 
         .tube.empty {
@@ -194,122 +189,125 @@
             position: relative;
         }
 
+        /* ── Wide neon orbs (3‑4× wider than tall) ── */
         .slot {
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), rgba(0,0,0,0.6));
-            box-shadow:
-                inset 0 0 10px rgba(0,0,0,0.8),
-                0 0 6px rgba(0,255,255,0.2);
+            width: 96px;                               /* 3x of height 32 */
+            height: 32px;
+            border-radius: 50%;                       /* ellipse */
+            background: radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.6) 100%);
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.8), 0 0 8px rgba(0,255,255,0.2);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             color: #000;
-            font-size: 1.2rem;
+            font-size: 1rem;
             transition: all 0.15s ease;
             border: 1px solid rgba(255,255,255,0.2);
         }
 
         .slot.filled {
-            background: radial-gradient(circle at 40% 40%, #fff 5%, var(--color) 60%);
-            box-shadow:
-                0 0 4px var(--color),
-                0 0 6px rgba(0,255,255,0.3),
-                inset 0 0 2px rgba(255,255,255,0.6);
+            background: radial-gradient(ellipse at 50% 50%, #fff 5%, var(--color) 70%);
+            box-shadow: 0 0 6px var(--color), 0 0 10px rgba(0,255,255,0.3), inset 0 0 3px rgba(255,255,255,0.6);
             border: 1px solid rgba(255,255,255,0.4);
-            animation: orbGlow 2s ease-in-out infinite alternate;
+            animation: orbGlow 2s infinite alternate;
         }
 
         @keyframes orbGlow {
-            0% { box-shadow: 0 0 3px var(--color), 0 0 6px rgba(0,255,255,0.2); }
-            100% { box-shadow: 0 0 5px var(--color), 0 0 10px rgba(255,0,255,0.25); }
+            0% { box-shadow: 0 0 4px var(--color), 0 0 8px rgba(0,255,255,0.2); }
+            100% { box-shadow: 0 0 8px var(--color), 0 0 15px rgba(255,0,255,0.3); }
         }
 
         .letter-overlay {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 700;
             color: white;
-            text-shadow: 0 0 6px rgba(0,0,0,0.8), 0 0 8px rgba(255,255,255,0.3);
+            text-shadow: 0 0 6px rgba(0,0,0,0.8), 0 0 10px rgba(255,255,255,0.3);
         }
 
+        /* ── Seed & difficulty area (moved down, labelled) ── */
         .seed-area {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin: 15px 0 5px;
+            margin: 20px 0 5px;
             background: rgba(0,0,0,0.5);
             border-radius: 30px;
-            padding: 8px 15px;
+            padding: 15px 20px;
             border: 1px solid rgba(0,255,255,0.4);
             box-shadow: 0 0 15px rgba(0,255,255,0.3);
         }
 
+        .seed-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .seed-row label {
+            font-size: 0.9rem;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .seed-input {
-            padding: 10px 15px;
+            padding: 12px 18px;
             border-radius: 30px;
             border: 1px solid var(--neon-cyan);
             background: rgba(0, 0, 0, 0.6);
             color: var(--neon-cyan);
             flex: 1;
-            min-width: 120px;
-            outline: none;
+            min-width: 220px;
             font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
             letter-spacing: 1px;
             transition: all 0.2s;
         }
 
-        .seed-input::placeholder {
-            color: rgba(0,255,255,0.4);
-        }
-
         .seed-input:focus {
             border-color: var(--neon-magenta);
-            box-shadow: 0 0 20px var(--neon-magenta);
+            box-shadow: 0 0 25px var(--neon-magenta);
         }
 
         select {
-            padding: 10px 15px;
+            padding: 12px 18px;
             border-radius: 30px;
             border: 1px solid var(--neon-cyan);
             background: rgba(0,0,0,0.6);
             color: var(--neon-cyan);
             font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
             letter-spacing: 1px;
             outline: none;
             cursor: pointer;
             box-shadow: 0 0 12px rgba(0,255,255,0.3);
         }
 
-        select option {
-            background: #111;
-            color: #0ff;
-        }
-
+        /* ── Settings row (checkbox, buttons) ── */
         .settings-row {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
-            margin-top: 15px;
+            gap: 20px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
 
-        label.checkbox-label {
+        .checkbox-label {
             display: flex;
             align-items: center;
             gap: 8px;
             cursor: pointer;
             background: rgba(0,0,0,0.5);
-            padding: 8px 18px;
+            padding: 10px 22px;
             border-radius: 30px;
             border: 1px solid var(--neon-cyan);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             text-shadow: 0 0 5px var(--neon-cyan);
+            text-transform: uppercase;
         }
 
+        /* ── Overlays ── */
         .overlay {
             display: none;
             position: fixed;
@@ -322,20 +320,20 @@
         }
 
         .modal {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(30px);
-            padding: 40px;
-            border-radius: 30px;
+            padding: 50px;
+            border-radius: 45px;
             text-align: center;
             border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 60px var(--neon-cyan);
-            max-width: 400px;
+            box-shadow: 0 0 90px var(--neon-cyan);
+            max-width: 500px;
             width: 90%;
         }
 
         .win-modal h2 {
-            font-size: 2.2rem;
-            margin-bottom: 15px;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
             background: linear-gradient(to right, #0ff, #f0f, #0ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -343,28 +341,24 @@
         }
 
         @keyframes glowText {
-            from { text-shadow: 0 0 15px #0ff; }
-            to { text-shadow: 0 0 40px #f0f; }
+            from { text-shadow: 0 0 25px #0ff; }
+            to { text-shadow: 0 0 60px #f0f; }
         }
 
         .win-modal p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             margin-bottom: 25px;
         }
 
-        @media (max-width: 500px) {
-            .tube-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 12px;
-            }
-            .tube {
-                width: 65px;
-            }
-            .slot {
-                width: 38px;
-                height: 38px;
-            }
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
+
+        .medal { margin-right: 8px; }
     </style>
 </head>
 <body>
@@ -376,43 +370,56 @@
             <button id="restartBtn">↺ RESTART</button>
         </div>
     </div>
+
     <div class="tube-grid" id="tubeGrid"></div>
+
+    <!-- Seed & Difficulty (moved down) -->
     <div class="seed-area">
-        <input type="text" class="seed-input" id="seedInput" placeholder="SEED">
-        <button id="loadSeedBtn" class="primary-cta">LOAD</button>
-        <button id="newPuzzleBtn">✨ NEW</button>
-        <button id="copySeedBtn">📋 COPY</button>
-        <select id="difficultySelect">
-            <option value="easy">EASY</option>
-            <option value="medium" selected>MED</option>
-            <option value="hard">HARD</option>
-        </select>
+        <div class="seed-row">
+            <label>SEED</label>
+            <input type="text" class="seed-input" id="seedInput" placeholder="Enter seed...">
+            <button id="loadSeedBtn" class="primary-cta">LOAD</button>
+            <button id="newPuzzleBtn">✨ NEW</button>
+            <button id="copySeedBtn">📋 COPY</button>
+        </div>
+        <div class="seed-row">
+            <label>DIFFICULTY</label>
+            <select id="difficultySelect">
+                <option value="easy">EASY</option>
+                <option value="medium" selected>MED</option>
+                <option value="hard">HARD</option>
+            </select>
+        </div>
     </div>
+
     <div class="settings-row">
         <label class="checkbox-label">
-            <input type="checkbox" id="showLettersCheck"> <span>LETTERS (A11Y)</span>
+            <input type="checkbox" id="showLettersCheck"> <span>🔤 SHOW LETTERS</span>
         </label>
-        <button id="editColorsBtn" class="secondary" style="font-size:0.75rem;">🎨 COLORS</button>
-        <button id="leaderboardBtn" style="font-size:0.75rem;">🏆 LEADERBOARD</button>
+        <button id="editColorsBtn">🎨 COLORS</button>
+        <button id="leaderboardBtn">🏆 LEADERBOARD</button>
     </div>
 </div>
 
-<!-- Win overlay -->
+<!-- Win overlay (with close button and top‑5 leaderboard) -->
 <div class="overlay win-overlay" id="winOverlay">
     <div class="modal win-modal">
         <h2>✨ SORTED! ✨</h2>
         <p>MOVES: <span id="winMoves"></span></p>
+        <div id="winTop5" style="text-align:left; margin:20px 0; max-height:150px; overflow-y:auto;"></div>
         <button id="winNewPuzzle" class="primary-cta">NEW</button>
-        <button id="winRestart" class="secondary">RESTART</button>
-        <button id="winCopySeed" class="secondary">COPY SEED</button>
+        <button id="winRestart">RESTART</button>
+        <button id="winCopySeed">COPY SEED</button>
+        <button id="winClose" class="secondary" style="margin-top:10px;">CLOSE</button>
     </div>
 </div>
 
-<!-- Leaderboard overlay -->
+<!-- Leaderboard overlay (with medals, timestamps, placement) -->
 <div class="overlay" id="leaderboardOverlay">
-    <div class="modal">
+    <div class="modal" style="max-width:550px;">
         <h3>🏆 LEADERBOARD</h3>
-        <div id="leaderboardList" style="max-height:300px; overflow-y:auto; margin: 15px 0;"></div>
+        <div id="leaderboardList" style="max-height:350px; overflow-y:auto; margin:15px 0; text-align:left;"></div>
+        <div id="playerPlacement" style="margin-bottom:10px;"></div>
         <button id="closeLeaderboard">CLOSE</button>
     </div>
 </div>
@@ -429,13 +436,13 @@
 
 <script src="puzzleLogic.js"></script>
 <script>
-    const API_BASE = 'https://color-sort-backend.onrender.com';  // Your Render backend
+    const API_BASE = 'https://color-sort-backend.onrender.com';
     const PL = window.PuzzleLogic;
     const DEFAULT_COLORS = PL.DEFAULT_COLORS;
     let COLORS = loadColors();
     let tubes, initialTubes, moveHistory, moveCount, selectedTubeIndex;
     let currentSeed = 'neon-arcade', currentDifficulty = 'medium', showLetters = false;
-    let currentMoves = [];   // Records { src, dst } per move for submission
+    let currentMoves = [];
 
     function loadColors() {
         const stored = localStorage.getItem('neonSortColors');
@@ -449,14 +456,15 @@
     }
     function saveColors() { localStorage.setItem('neonSortColors', JSON.stringify(COLORS)); }
 
-    // DOM refs
     const tubeGrid = document.getElementById('tubeGrid');
     const moveDisplay = document.getElementById('moveDisplay');
     const seedInput = document.getElementById('seedInput');
     const winOverlay = document.getElementById('winOverlay');
     const winMovesSpan = document.getElementById('winMoves');
+    const winTop5 = document.getElementById('winTop5');
     const leaderboardOverlay = document.getElementById('leaderboardOverlay');
     const leaderboardList = document.getElementById('leaderboardList');
+    const playerPlacement = document.getElementById('playerPlacement');
     const leaderboardBtn = document.getElementById('leaderboardBtn');
     const closeLeaderboardBtn = document.getElementById('closeLeaderboard');
 
@@ -544,7 +552,7 @@
 
     function newRandomSeed() { return Math.random().toString(36).substr(2,8) + Date.now().toString(36); }
 
-    // ─── Leaderboard functions ───
+    // ─── Leaderboard functions (per seed) ───
     async function submitScore(name) {
         const payload = {
             seed: currentSeed,
@@ -561,7 +569,7 @@
             const data = await res.json();
             if (data.success) {
                 alert(`Score submitted! Moves: ${data.moveCount}`);
-                showLeaderboard();   // auto-show leaderboard after submission
+                fetchLeaderboardForSeed();   // refresh leaderboard
             } else {
                 alert('Error: ' + data.error);
             }
@@ -570,30 +578,80 @@
         }
     }
 
-    async function showLeaderboard() {
+    async function fetchLeaderboardForSeed() {
         try {
-            const res = await fetch(`${API_BASE}/api/leaderboard?difficulty=${currentDifficulty}`);
+            const res = await fetch(`${API_BASE}/api/leaderboard?seed=${encodeURIComponent(currentSeed)}&difficulty=${currentDifficulty}`);
             const data = await res.json();
-            leaderboardList.innerHTML = data.length
-                ? data.map((e, i) => `<p>${i+1}. ${e.playerName} – ${e.moveCount} moves (seed: ${e.seed})</p>`).join('')
-                : '<p>No scores yet.</p>';
+            displayLeaderboard(data.top, data.total);
             leaderboardOverlay.style.display = 'flex';
         } catch(e) {
             alert('Could not load leaderboard.');
         }
     }
 
-    // Win detection with prompt for name
+    function displayLeaderboard(top, total) {
+        let html = '';
+        top.forEach((entry, i) => {
+            let medal = '';
+            if (i === 0) medal = '🥇';
+            else if (i === 1) medal = '🥈';
+            else if (i === 2) medal = '🥉';
+            const time = new Date(entry.timestamp + 'Z').toLocaleString();
+            html += `<div class="leaderboard-entry">
+                <span>${medal} ${i+1}. ${entry.playerName} – ${entry.moveCount} moves</span>
+                <span style="font-size:0.8rem; opacity:0.7;">${time}</span>
+            </div>`;
+        });
+        leaderboardList.innerHTML = html || '<p>No scores yet.</p>';
+
+        // Show player's own placement if they've submitted and aren't in top 50
+        const currentPlayer = localStorage.getItem('lastPlayerName') || '';
+        const currentMovesCount = moveCount; // not reliable after win, so we'll store after submission
+        // We'll handle placement in submitScore
+    }
+
+    // Win detection with top‑5 preview
     function checkWinAndShow() {
         if (isWinState(tubes)) {
             winMovesSpan.textContent = moveCount;
             winOverlay.style.display = 'flex';
+            // Fetch top 5 for this seed
+            fetchTop5ForWin();
+            // Ask for name after a short delay
             setTimeout(() => {
                 const name = prompt('🎉 You won! Enter your name for the leaderboard:');
-                if (name) submitScore(name);
+                if (name) {
+                    localStorage.setItem('lastPlayerName', name);
+                    submitScore(name);
+                }
             }, 500);
         }
     }
+
+    async function fetchTop5ForWin() {
+        try {
+            const res = await fetch(`${API_BASE}/api/leaderboard?seed=${encodeURIComponent(currentSeed)}&difficulty=${currentDifficulty}&limit=5`);
+            const data = await res.json();
+            const top = data.top || [];
+            let html = '<h4>TOP 5</h4>';
+            if (top.length === 0) html += '<p>No scores yet.</p>';
+            else {
+                top.forEach((entry, i) => {
+                    let medal = '';
+                    if (i === 0) medal = '🥇';
+                    else if (i === 1) medal = '🥈';
+                    else if (i === 2) medal = '🥉';
+                    html += `<div>${medal} ${i+1}. ${entry.playerName} – ${entry.moveCount} moves</div>`;
+                });
+            }
+            winTop5.innerHTML = html;
+        } catch(e) { winTop5.innerHTML = ''; }
+    }
+
+    // Close win overlay without restarting
+    document.getElementById('winClose').addEventListener('click', () => {
+        winOverlay.style.display = 'none';
+    });
 
     // Color editor
     function buildColorEditor() {
@@ -601,7 +659,6 @@
         rows.innerHTML = '';
         COLORS.forEach((c, i) => {
             const row = document.createElement('div');
-            row.className = 'color-row';
             row.innerHTML = `<span style="color:${c.hex}">${c.name}</span> <input type="color" value="${c.hex}" data-index="${i}">`;
             rows.appendChild(row);
         });
@@ -627,7 +684,7 @@
         renderTubes();
     });
 
-    // Event listeners for game controls
+    // Event listeners
     document.getElementById('undoBtn').addEventListener('click', undoMove);
     document.getElementById('restartBtn').addEventListener('click', restartPuzzle);
     document.getElementById('newPuzzleBtn').addEventListener('click', () => loadPuzzle(newRandomSeed(), currentDifficulty));
@@ -638,8 +695,6 @@
     document.getElementById('copySeedBtn').addEventListener('click', () => navigator.clipboard.writeText(currentSeed));
     document.getElementById('difficultySelect').addEventListener('change', e => loadPuzzle(currentSeed, e.target.value));
     document.getElementById('showLettersCheck').addEventListener('change', e => { showLetters = e.target.checked; renderTubes(); });
-
-    // Win overlay buttons
     document.getElementById('winNewPuzzle').addEventListener('click', () => {
         winOverlay.style.display = 'none';
         loadPuzzle(newRandomSeed(), currentDifficulty);
@@ -650,13 +705,10 @@
     });
     document.getElementById('winCopySeed').addEventListener('click', () => navigator.clipboard.writeText(currentSeed));
 
-    // Leaderboard UI listeners
-    leaderboardBtn.addEventListener('click', showLeaderboard);
-    closeLeaderboardBtn.addEventListener('click', () => {
-        leaderboardOverlay.style.display = 'none';
-    });
+    leaderboardBtn.addEventListener('click', fetchLeaderboardForSeed);
+    closeLeaderboardBtn.addEventListener('click', () => leaderboardOverlay.style.display = 'none');
 
-    // Start the game
+    // Start game
     loadPuzzle('neon-arcade', 'medium');
 </script>
 </body>
