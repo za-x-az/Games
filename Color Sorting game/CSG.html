@@ -68,7 +68,7 @@
         }
 
         .game-container {
-            display: none;                  /* hidden until server wakes */
+            display: none;
             width: 100%;
             max-width: 900px;
             background: rgba(0, 0, 0, 0.6);
@@ -160,11 +160,11 @@
         }
 
         .tube {
-            width: 130px;                              /* wider to hold 96px pills */
+            width: 130px;
             background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(20px);
-            border-radius: 45px;                       /* uniform round capsule */
-            padding: 20px 15px 18px;                   /* side padding gives inner width ~100px */
+            border-radius: 45px;
+            padding: 20px 15px 18px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -215,11 +215,11 @@
             position: relative;
         }
 
-        /* ── Pill‑shaped slot (capsule) ── */
+        /* Capsule slot */
         .slot {
             width: 96px;
             height: 32px;
-            border-radius: 16px;                       /* half height = true capsule */
+            border-radius: 16px;
             background: rgba(255,255,255,0.08);
             box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
             display: flex;
@@ -233,11 +233,11 @@
         }
 
         .slot.filled {
-            background: linear-gradient(180deg, 
-                            rgba(255,255,255,0.5) 0%, 
-                            var(--color) 40%, 
-                            var(--color) 60%, 
-                            rgba(0,0,0,0.4) 100%);
+            background: linear-gradient(180deg,
+                rgba(255,255,255,0.5) 0%,
+                var(--color) 40%,
+                var(--color) 60%,
+                rgba(0,0,0,0.4) 100%);
             box-shadow: 0 0 8px var(--color), 0 0 14px rgba(0,255,255,0.4), inset 0 0 3px rgba(255,255,255,0.6);
             border: 1px solid rgba(255,255,255,0.4);
             animation: orbGlow 2s infinite alternate;
@@ -255,7 +255,7 @@
             text-shadow: 0 0 6px rgba(0,0,0,0.8), 0 0 10px rgba(255,255,255,0.5);
         }
 
-        /* ── Seed & difficulty area (labels on separate lines) ── */
+        /* Seed / difficulty area */
         .seed-area {
             margin: 25px 0 10px;
             background: rgba(0,0,0,0.5);
@@ -267,19 +267,22 @@
 
         .seed-row {
             display: flex;
-            gap: 15px;
             align-items: center;
+            gap: 15px;
             flex-wrap: wrap;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+        }
+
+        .seed-row:last-child {
+            margin-bottom: 0;
         }
 
         .seed-label {
-            display: block;
             font-size: 0.9rem;
             color: var(--neon-cyan);
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-bottom: 8px;
+            white-space: nowrap;
         }
 
         .seed-input {
@@ -289,7 +292,7 @@
             background: rgba(0, 0, 0, 0.6);
             color: var(--neon-cyan);
             flex: 1;
-            min-width: 250px;
+            min-width: 200px;
             font-family: 'Orbitron', sans-serif;
             font-size: 1rem;
             letter-spacing: 1px;
@@ -421,20 +424,17 @@
 
     <div class="tube-grid" id="tubeGrid"></div>
 
-    <!-- Seed area with separate label lines -->
+    <!-- Seed / Difficulty area (single-line seed row) -->
     <div class="seed-area">
-        <label class="seed-label">SEED</label>
         <div class="seed-row">
+            <span class="seed-label">SEED</span>
             <input type="text" class="seed-input" id="seedInput" placeholder="Enter seed...">
-        </div>
-        <div class="seed-row" style="margin-bottom:0;">
             <button id="loadSeedBtn" class="primary-cta">LOAD</button>
             <button id="newPuzzleBtn">✨ NEW</button>
             <button id="copySeedBtn">📋 COPY</button>
         </div>
-
-        <label class="seed-label" style="margin-top:15px;">DIFFICULTY</label>
-        <div class="seed-row" style="margin-bottom:0;">
+        <div class="seed-row">
+            <span class="seed-label">DIFFICULTY</span>
             <select id="difficultySelect">
                 <option value="easy">EASY</option>
                 <option value="medium" selected>MED</option>
@@ -544,14 +544,17 @@
     function deepCopyTubes(t) { return PL.deepCopyTubes(t); }
     function getOccupiedCount(t) { return PL.getOccupiedCount(t); }
 
+    // Fixed: save state BEFORE the move
     function performMove(src, dst) {
+        const stateBefore = deepCopyTubes(tubes);
         const ok = PL.performMove(tubes, src, dst);
         if (ok) {
-            moveHistory.push(deepCopyTubes(tubes));
+            moveHistory.push(stateBefore);
             currentMoves.push({ src, dst });
         }
         return ok;
     }
+
     function isWinState(state) { return PL.isWinState(state); }
     function generatePuzzle(seed, diff) { return PL.generatePuzzle(seed, diff, COLORS); }
 
