@@ -158,10 +158,10 @@
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             border-radius: inherit;
-            background: linear-gradient(180deg, 
-                rgba(0,255,255,0.15) 0%, 
-                rgba(255,0,255,0.1) 50%, 
-                rgba(0,255,255,0.15) 100%);
+            background: linear-gradient(180deg,
+                    rgba(0,255,255,0.15) 0%,
+                    rgba(255,0,255,0.1) 50%,
+                    rgba(0,255,255,0.15) 100%);
             pointer-events: none;
             z-index: 0;
         }
@@ -294,6 +294,7 @@
             align-items: center;
             gap: 15px;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
 
         label.checkbox-label {
@@ -309,26 +310,26 @@
             text-shadow: 0 0 5px var(--neon-cyan);
         }
 
-        .win-overlay {
+        .overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(15px);
             justify-content: center;
             align-items: center;
             z-index: 200;
         }
 
-        .win-modal {
+        .modal {
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(30px);
             padding: 40px;
             border-radius: 30px;
             text-align: center;
             border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 60px var(--neon-cyan), 0 0 120px var(--neon-magenta);
-            max-width: 350px;
+            box-shadow: 0 0 60px var(--neon-cyan);
+            max-width: 400px;
             width: 90%;
         }
 
@@ -349,54 +350,6 @@
         .win-modal p {
             font-size: 1.2rem;
             margin-bottom: 25px;
-        }
-
-        .color-editor-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(15px);
-            justify-content: center;
-            align-items: center;
-            z-index: 150;
-        }
-
-        .color-editor-modal {
-            background: rgba(0,0,0,0.9);
-            border: 2px solid var(--neon-cyan);
-            border-radius: 20px;
-            padding: 25px;
-            width: 90%;
-            max-width: 450px;
-            box-shadow: 0 0 50px var(--neon-cyan);
-        }
-
-        .color-editor-modal h3 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--neon-cyan);
-            text-shadow: 0 0 10px var(--neon-cyan);
-        }
-
-        .color-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 10px 0;
-        }
-
-        .color-row span {
-            width: 80px;
-            font-size: 0.9rem;
-        }
-
-        .color-row input[type="color"] {
-            width: 60px;
-            height: 30px;
-            border: none;
-            background: transparent;
-            cursor: pointer;
         }
 
         @media (max-width: 500px) {
@@ -440,11 +393,13 @@
             <input type="checkbox" id="showLettersCheck"> <span>LETTERS (A11Y)</span>
         </label>
         <button id="editColorsBtn" class="secondary" style="font-size:0.75rem;">🎨 COLORS</button>
+        <button id="leaderboardBtn" style="font-size:0.75rem;">🏆 LEADERBOARD</button>
     </div>
 </div>
 
-<div class="win-overlay" id="winOverlay">
-    <div class="win-modal">
+<!-- Win overlay -->
+<div class="overlay win-overlay" id="winOverlay">
+    <div class="modal win-modal">
         <h2>✨ SORTED! ✨</h2>
         <p>MOVES: <span id="winMoves"></span></p>
         <button id="winNewPuzzle" class="primary-cta">NEW</button>
@@ -453,370 +408,148 @@
     </div>
 </div>
 
-<div class="color-editor-overlay" id="colorEditorOverlay">
-    <div class="color-editor-modal">
-        <h3>CUSTOMIZE COLORS</h3>
-        <div id="colorEditorRows"></div>
-        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-            <button id="closeColorEditor">CLOSE</button>
-            <button id="resetColorsBtn">RESET DEFAULT</button>
-        </div>
+<!-- Leaderboard overlay -->
+<div class="overlay" id="leaderboardOverlay">
+    <div class="modal">
+        <h3>🏆 LEADERBOARD</h3>
+        <div id="leaderboardList" style="max-height:300px; overflow-y:auto; margin: 15px 0;"></div>
+        <button id="closeLeaderboard">CLOSE</button>
     </div>
 </div>
 
+<!-- Color editor overlay -->
+<div class="overlay" id="colorEditorOverlay">
+    <div class="modal">
+        <h3>CUSTOMIZE COLORS</h3>
+        <div id="colorEditorRows"></div>
+        <button id="closeColorEditor">CLOSE</button>
+        <button id="resetColorsBtn">RESET DEFAULT</button>
+    </div>
+</div>
+
+<script src="puzzleLogic.js"></script>
 <script>
-    (function() {
-        const DEFAULT_COLORS = [
-            { name: 'Red', hex: '#ff0040', letter: 'R' },
-            { name: 'Green', hex: '#00ff66', letter: 'G' },
-            { name: 'Blue', hex: '#0099ff', letter: 'B' },
-            { name: 'Yellow', hex: '#ffdd00', letter: 'Y' },
-            { name: 'Purple', hex: '#b300ff', letter: 'P' },
-            { name: 'Orange', hex: '#ff6600', letter: 'O' },
-            { name: 'Cyan', hex: '#00ffff', letter: 'C' },
-            { name: 'Pink', hex: '#ff66b2', letter: 'K' },
-            { name: 'Lime', hex: '#ccff00', letter: 'L' },
-            { name: 'Brown', hex: '#cc9966', letter: 'W' }
-        ];
+    const API_BASE = 'https://color-sort-backend.onrender.com';  // Your Render backend
+    const PL = window.PuzzleLogic;
+    const DEFAULT_COLORS = PL.DEFAULT_COLORS;
+    let COLORS = loadColors();
+    let tubes, initialTubes, moveHistory, moveCount, selectedTubeIndex;
+    let currentSeed = 'neon-arcade', currentDifficulty = 'medium', showLetters = false;
+    let currentMoves = [];   // Records { src, dst } per move for submission
 
-        function loadColors() {
-            const stored = localStorage.getItem('neonSortColors');
-            if (stored) {
-                try {
-                    const parsed = JSON.parse(stored);
-                    if (Array.isArray(parsed) && parsed.length === 10) return parsed;
-                } catch(e) {}
-            }
-            return DEFAULT_COLORS.map(c => ({...c}));
+    function loadColors() {
+        const stored = localStorage.getItem('neonSortColors');
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                if (Array.isArray(parsed) && parsed.length === 10) return parsed;
+            } catch(e) {}
         }
+        return DEFAULT_COLORS.map(c => ({...c}));
+    }
+    function saveColors() { localStorage.setItem('neonSortColors', JSON.stringify(COLORS)); }
 
-        let COLORS = loadColors();
-        const NUM_TUBES = 12;
-        const SLOTS_PER_TUBE = 4;
-        const NUM_COLORS = 10;
+    // DOM refs
+    const tubeGrid = document.getElementById('tubeGrid');
+    const moveDisplay = document.getElementById('moveDisplay');
+    const seedInput = document.getElementById('seedInput');
+    const winOverlay = document.getElementById('winOverlay');
+    const winMovesSpan = document.getElementById('winMoves');
+    const leaderboardOverlay = document.getElementById('leaderboardOverlay');
+    const leaderboardList = document.getElementById('leaderboardList');
+    const leaderboardBtn = document.getElementById('leaderboardBtn');
+    const closeLeaderboardBtn = document.getElementById('closeLeaderboard');
 
-        function mulberry32(a) {
-            return function() {
-                a |= 0; a = a + 0x6D2B79F5 | 0;
-                var t = Math.imul(a ^ a >>> 15, 1 | a);
-                t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-                return ((t ^ t >>> 14) >>> 0) / 4294967296;
-            };
-        }
-        function hashString(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                hash = ((hash << 5) - hash) + str.charCodeAt(i);
-                hash |= 0;
-            }
-            return Math.abs(hash);
-        }
+    function deepCopyTubes(t) { return PL.deepCopyTubes(t); }
+    function getOccupiedCount(t) { return PL.getOccupiedCount(t); }
 
-        let tubes = [], initialTubes = [], moveHistory = [], moveCount = 0;
-        let selectedTubeIndex = -1;
-        let currentSeed = '', currentDifficulty = 'medium';
-        let showLetters = false;
-
-        const tubeGrid = document.getElementById('tubeGrid');
-        const moveDisplay = document.getElementById('moveDisplay');
-        const undoBtn = document.getElementById('undoBtn');
-        const restartBtn = document.getElementById('restartBtn');
-        const seedInput = document.getElementById('seedInput');
-        const loadSeedBtn = document.getElementById('loadSeedBtn');
-        const newPuzzleBtn = document.getElementById('newPuzzleBtn');
-        const copySeedBtn = document.getElementById('copySeedBtn');
-        const difficultySelect = document.getElementById('difficultySelect');
-        const showLettersCheck = document.getElementById('showLettersCheck');
-        const winOverlay = document.getElementById('winOverlay');
-        const winMovesSpan = document.getElementById('winMoves');
-        const winNewPuzzleBtn = document.getElementById('winNewPuzzle');
-        const winRestartBtn = document.getElementById('winRestart');
-        const winCopySeedBtn = document.getElementById('winCopySeed');
-        const editColorsBtn = document.getElementById('editColorsBtn');
-        const colorEditorOverlay = document.getElementById('colorEditorOverlay');
-        const colorEditorRows = document.getElementById('colorEditorRows');
-        const closeColorEditor = document.getElementById('closeColorEditor');
-        const resetColorsBtn = document.getElementById('resetColorsBtn');
-
-        function deepCopyTubes(t) { return t.map(t => [...t]); }
-        function getOccupiedCount(tube) {
-            let c = 0;
-            for (let i = 0; i < SLOTS_PER_TUBE; i++) {
-                if (tube[i] !== null) c++;
-                else break;
-            }
-            return c;
-        }
-        function getBottomBlock(tube) {
-            const occ = getOccupiedCount(tube);
-            if (!occ) return [];
-            const color = tube[occ-1];
-            const block = [];
-            for (let i = occ-1; i >= 0 && tube[i]===color; i--) block.push(color);
-            return block;
-        }
-        function canPlace(tube, color) {
-            const occ = getOccupiedCount(tube);
-            if (occ === 0) return true;
-            if (occ >= SLOTS_PER_TUBE) return false;
-            return tube[occ-1] === color;
-        }
-        function availableSlots(tube) { return SLOTS_PER_TUBE - getOccupiedCount(tube); }
-
-        function performMove(src, dst) {
-            if (src === dst) return false;
-            const srcT = tubes[src], dstT = tubes[dst];
-            const block = getBottomBlock(srcT);
-            if (!block.length) return false;
-            const color = block[0];
-            if (!canPlace(dstT, color)) return false;
-            const cap = availableSlots(dstT);
-            if (!cap) return false;
-            const cnt = Math.min(block.length, cap);
+    function performMove(src, dst) {
+        const ok = PL.performMove(tubes, src, dst);
+        if (ok) {
             moveHistory.push(deepCopyTubes(tubes));
-            const srcOcc = getOccupiedCount(srcT);
-            for (let i = 0; i < cnt; i++) srcT[srcOcc-1-i] = null;
-            const dstOcc = getOccupiedCount(dstT);
-            for (let i = 0; i < cnt; i++) dstT[dstOcc+i] = color;
-            return true;
-        }
-
-        function isWinState(state) {
-            const counts = {};
-            for (let t of state) {
-                const occ = getOccupiedCount(t);
-                if (!occ) continue;
-                if (occ !== SLOTS_PER_TUBE) return false;
-                const first = t[0];
-                if (t.some(c => c !== first)) return false;
-                counts[first] = (counts[first]||0)+1;
-            }
-            return Object.keys(counts).length === NUM_COLORS && Object.values(counts).every(v=>v===1);
-        }
-
-        function normalizeState(s) {
-            return s.map(t=>t.map(c=>c||'null').join(',')).sort().join('|');
-        }
-        function isSolvable(state, maxD=40) {
-            if (isWinState(state)) return true;
-            const visited = new Set();
-            const stack = [{ s: deepCopyTubes(state), d:0 }];
-            visited.add(normalizeState(state));
-            while(stack.length) {
-                const {s,d} = stack.pop();
-                if(d>=maxD) continue;
-                for(let src=0;src<s.length;src++){
-                    const blk = getBottomBlock(s[src]);
-                    if(!blk.length) continue;
-                    const col = blk[0];
-                    for(let dst=0;dst<s.length;dst++){
-                        if(src===dst || !canPlace(s[dst],col) || !availableSlots(s[dst])) continue;
-                        const ns = deepCopyTubes(s);
-                        const srcO = getOccupiedCount(ns[src]);
-                        const cap = availableSlots(ns[dst]);
-                        const cnt = Math.min(blk.length, cap);
-                        for(let i=0;i<cnt;i++) ns[src][srcO-1-i]=null;
-                        const dstO = getOccupiedCount(ns[dst]);
-                        for(let i=0;i<cnt;i++) ns[dst][dstO+i]=col;
-                        const key = normalizeState(ns);
-                        if(!visited.has(key)){
-                            if(isWinState(ns)) return true;
-                            visited.add(key);
-                            stack.push({s:ns,d:d+1});
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        function generateRandomDistribution(rand) {
-            const pool = [];
-            COLORS.forEach(c => { for(let i=0;i<4;i++) pool.push(c.name); });
-            for(let i=pool.length-1;i>0;i--){
-                const j = Math.floor(rand()*(i+1));
-                [pool[i],pool[j]] = [pool[j],pool[i]];
-            }
-            const state = Array.from({length:NUM_TUBES}, ()=>new Array(SLOTS_PER_TUBE).fill(null));
-            let idx=0;
-            for(let t=0;t<NUM_TUBES;t++) for(let s=0;s<SLOTS_PER_TUBE;s++) if(idx<pool.length) state[t][s]=pool[idx++];
-            return state;
-        }
-
-        function generatePuzzle(seed, diff) {
-            for(let att=0; att<100; att++){
-                const r = mulberry32(hashString(seed+'::'+att));
-                const cand = generateRandomDistribution(r);
-                if(isSolvable(cand, 35+att*2)) return cand;
-            }
-            return [
-                ['Red','Green','Blue','Red'],
-                ['Green','Blue','Red','Green'],
-                ['Blue','Red','Green','Blue'],
-                ['Yellow','Purple','Orange','Yellow'],
-                ['Purple','Orange','Cyan','Purple'],
-                ['Orange','Cyan','Pink','Orange'],
-                ['Cyan','Pink','Lime','Cyan'],
-                ['Pink','Lime','Brown','Pink'],
-                ['Lime','Brown','Yellow','Lime'],
-                ['Brown','Yellow','Purple','Brown'],
-                [null,null,null,null],[null,null,null,null]
-            ];
-        }
-
-        function renderTubes() {
-            tubeGrid.innerHTML = '';
-            tubes.forEach((tube, idx) => {
-                const d = document.createElement('div');
-                d.className = 'tube' + (idx===selectedTubeIndex?' selected':'');
-                if(!getOccupiedCount(tube)) d.classList.add('empty');
-                for(let s=0; s<SLOTS_PER_TUBE; s++){
-                    const slot = document.createElement('div');
-                    slot.className = 'slot';
-                    const col = tube[s];
-                    if(col){
-                        slot.classList.add('filled');
-                        const cobj = COLORS.find(c=>c.name===col);
-                        slot.style.setProperty('--color', cobj.hex);
-                        if(showLetters) slot.innerHTML = `<span class="letter-overlay">${cobj.letter}</span>`;
-                    }
-                    d.appendChild(slot);
-                }
-                d.addEventListener('click', ()=> handleTubeClick(idx));
-                tubeGrid.appendChild(d);
-            });
-        }
-
-        function handleTubeClick(idx){
-            if(selectedTubeIndex===-1){
-                if(getOccupiedCount(tubes[idx])>0){ selectedTubeIndex=idx; renderTubes(); }
-            }else if(selectedTubeIndex===idx){
-                selectedTubeIndex=-1; renderTubes();
-            }else{
-                if(performMove(selectedTubeIndex, idx)){
-                    moveCount++; moveDisplay.textContent=moveCount;
-                    selectedTubeIndex=-1; renderTubes();
-                    if(isWinState(tubes)){
-                        winMovesSpan.textContent=moveCount;
-                        winOverlay.style.display='flex';
-                    }
-                }else{
-                    selectedTubeIndex=-1; renderTubes();
-                }
-            }
-        }
-
-        function undoMove(){
-            if(!moveHistory.length) return;
-            tubes = moveHistory.pop();
-            moveCount--; moveDisplay.textContent=moveCount;
-            selectedTubeIndex=-1; renderTubes();
-            winOverlay.style.display='none';
-        }
-
-        function restartPuzzle(){
-            tubes = deepCopyTubes(initialTubes);
-            moveHistory=[]; moveCount=0; moveDisplay.textContent=0;
-            selectedTubeIndex=-1; renderTubes();
-            winOverlay.style.display='none';
-        }
-
-        function loadPuzzle(seed, diff){
-            currentSeed=seed; currentDifficulty=diff;
-            seedInput.value=seed; difficultySelect.value=diff;
-            const p = generatePuzzle(seed, diff);
-            initialTubes = deepCopyTubes(p);
-            tubes = deepCopyTubes(p);
-            moveHistory=[]; moveCount=0; moveDisplay.textContent=0;
-            selectedTubeIndex=-1; renderTubes();
-            winOverlay.style.display='none';
-        }
-
-        function newRandomSeed() { return Math.random().toString(36).substr(2,8)+Date.now().toString(36); }
-
-        function buildColorEditor() {
-            colorEditorRows.innerHTML = '';
-            COLORS.forEach((c, i) => {
-                const row = document.createElement('div');
-                row.className = 'color-row';
-                row.innerHTML = `<span style="color:${c.hex}">${c.name}</span>
-                                 <input type="color" value="${c.hex}" data-index="${i}">`;
-                colorEditorRows.appendChild(row);
-            });
-            document.querySelectorAll('#colorEditorRows input[type="color"]').forEach(input => {
-                input.addEventListener('input', (e) => {
-                    const idx = parseInt(e.target.dataset.index);
-                    COLORS[idx].hex = e.target.value;
-                    localStorage.setItem('neonSortColors', JSON.stringify(COLORS));
-                    renderTubes();
-                });
-            });
-        }
-
-        editColorsBtn.addEventListener('click', ()=>{
-            buildColorEditor();
-            colorEditorOverlay.style.display='flex';
-        });
-        closeColorEditor.addEventListener('click', ()=> colorEditorOverlay.style.display='none');
-        resetColorsBtn.addEventListener('click', ()=>{
-            COLORS = DEFAULT_COLORS.map(c=>({...c}));
-            localStorage.setItem('neonSortColors', JSON.stringify(COLORS));
-            buildColorEditor();
-            renderTubes();
-        });
-
-        undoBtn.addEventListener('click', undoMove);
-        restartBtn.addEventListener('click', restartPuzzle);
-        newPuzzleBtn.addEventListener('click', ()=> loadPuzzle(newRandomSeed(), currentDifficulty));
-        loadSeedBtn.addEventListener('click', ()=>{
-            let s = seedInput.value.trim() || newRandomSeed();
-            loadPuzzle(s, currentDifficulty);
-        });
-        copySeedBtn.addEventListener('click', ()=> navigator.clipboard.writeText(currentSeed).then(()=>alert('Seed copied!')));
-        difficultySelect.addEventListener('change', e=> loadPuzzle(currentSeed, e.target.value));
-        showLettersCheck.addEventListener('change', e=>{ showLetters=e.target.checked; renderTubes(); });
-        winNewPuzzleBtn.addEventListener('click', ()=>{ winOverlay.style.display='none'; loadPuzzle(newRandomSeed(), currentDifficulty); });
-        winRestartBtn.addEventListener('click', ()=>{ winOverlay.style.display='none'; restartPuzzle(); });
-        winCopySeedBtn.addEventListener('click', ()=> navigator.clipboard.writeText(currentSeed));
-
-        loadPuzzle('neon-arcade', 'medium');
-    })();
-</script>
-<script>
-    // ... (keep all your existing game logic)
-
-    // NEW: move recording
-    let currentMoves = [];  // array of { src, dst }
-
-    // Modify performMove to record
-    const originalPerformMove = performMove;
-    performMove = function(src, dst) {
-        const result = originalPerformMove(src, dst);
-        if (result) {
             currentMoves.push({ src, dst });
         }
-        return result;
-    };
+        return ok;
+    }
+    function isWinState(state) { return PL.isWinState(state); }
+    function generatePuzzle(seed, diff) { return PL.generatePuzzle(seed, diff, COLORS); }
 
-    // Modify restart / new puzzle to clear moves
-    const originalRestart = restartPuzzle;
-    restartPuzzle = function() {
-        originalRestart();
-        currentMoves = [];
-    };
-    const originalLoadPuzzle = loadPuzzle;
-    loadPuzzle = function(seed, diff) {
-        originalLoadPuzzle(seed, diff);
-        currentMoves = [];
-    };
+    function renderTubes() {
+        tubeGrid.innerHTML = '';
+        tubes.forEach((tube, idx) => {
+            const d = document.createElement('div');
+            d.className = 'tube' + (idx === selectedTubeIndex ? ' selected' : '');
+            if (!getOccupiedCount(tube)) d.classList.add('empty');
+            for (let s = 0; s < PL.SLOTS_PER_TUBE; s++) {
+                const slot = document.createElement('div');
+                slot.className = 'slot';
+                const col = tube[s];
+                if (col) {
+                    slot.classList.add('filled');
+                    const cobj = COLORS.find(c => c.name === col);
+                    slot.style.setProperty('--color', cobj.hex);
+                    if (showLetters) slot.innerHTML = `<span class="letter-overlay">${cobj.letter}</span>`;
+                }
+                d.appendChild(slot);
+            }
+            d.addEventListener('click', () => handleTubeClick(idx));
+            tubeGrid.appendChild(d);
+        });
+    }
 
-    // After win, show name prompt & submit
-    const API_BASE = 'https://color-sort-backend.onrender.com'; // << CHANGE THIS
+    function handleTubeClick(idx) {
+        if (selectedTubeIndex === -1) {
+            if (getOccupiedCount(tubes[idx]) > 0) { selectedTubeIndex = idx; renderTubes(); }
+        } else if (selectedTubeIndex === idx) {
+            selectedTubeIndex = -1; renderTubes();
+        } else {
+            if (performMove(selectedTubeIndex, idx)) {
+                moveCount++; moveDisplay.textContent = moveCount;
+                selectedTubeIndex = -1; renderTubes();
+                checkWinAndShow();
+            } else {
+                selectedTubeIndex = -1; renderTubes();
+            }
+        }
+    }
+
+    function undoMove() {
+        if (!moveHistory.length) return;
+        tubes = moveHistory.pop();
+        currentMoves.pop();
+        moveCount--; moveDisplay.textContent = moveCount;
+        selectedTubeIndex = -1; renderTubes();
+        winOverlay.style.display = 'none';
+    }
+
+    function restartPuzzle() {
+        tubes = deepCopyTubes(initialTubes);
+        moveHistory = []; moveCount = 0; currentMoves = [];
+        moveDisplay.textContent = '0';
+        selectedTubeIndex = -1; renderTubes();
+        winOverlay.style.display = 'none';
+    }
+
+    function loadPuzzle(seed, diff) {
+        currentSeed = seed; currentDifficulty = diff;
+        seedInput.value = seed; document.getElementById('difficultySelect').value = diff;
+        const p = generatePuzzle(seed, diff);
+        initialTubes = deepCopyTubes(p);
+        tubes = deepCopyTubes(p);
+        moveHistory = []; moveCount = 0; currentMoves = [];
+        moveDisplay.textContent = '0';
+        selectedTubeIndex = -1; renderTubes();
+        winOverlay.style.display = 'none';
+    }
+
+    function newRandomSeed() { return Math.random().toString(36).substr(2,8) + Date.now().toString(36); }
+
+    // ─── Leaderboard functions ───
     async function submitScore(name) {
         const payload = {
             seed: currentSeed,
             difficulty: currentDifficulty,
-            playerName: name,
+            playerName: name.trim(),
             moves: currentMoves
         };
         try {
@@ -827,39 +560,104 @@
             });
             const data = await res.json();
             if (data.success) {
-                alert('Score submitted!');
-                fetchLeaderboard();
+                alert(`Score submitted! Moves: ${data.moveCount}`);
+                showLeaderboard();   // auto-show leaderboard after submission
             } else {
                 alert('Error: ' + data.error);
             }
         } catch(e) {
-            alert('Network error');
+            alert('Network error – could not submit score.');
         }
     }
 
-    async function fetchLeaderboard() {
+    async function showLeaderboard() {
         try {
             const res = await fetch(`${API_BASE}/api/leaderboard?difficulty=${currentDifficulty}`);
             const data = await res.json();
-            // display leaderboard in a modal (implement your own UI)
-            console.log('Leaderboard:', data);
-        } catch(e) {}
+            leaderboardList.innerHTML = data.length
+                ? data.map((e, i) => `<p>${i+1}. ${e.playerName} – ${e.moveCount} moves (seed: ${e.seed})</p>`).join('')
+                : '<p>No scores yet.</p>';
+            leaderboardOverlay.style.display = 'flex';
+        } catch(e) {
+            alert('Could not load leaderboard.');
+        }
     }
 
-    // Override win detection to prompt name
-    const originalCheckWin = checkWinAndShow;
-    checkWinAndShow = function() {
-        originalCheckWin();
+    // Win detection with prompt for name
+    function checkWinAndShow() {
         if (isWinState(tubes)) {
-            // Delay to let overlay show
+            winMovesSpan.textContent = moveCount;
+            winOverlay.style.display = 'flex';
             setTimeout(() => {
-                const name = prompt('Congratulations! Enter your name for the leaderboard:');
-                if (name) submitScore(name.trim());
+                const name = prompt('🎉 You won! Enter your name for the leaderboard:');
+                if (name) submitScore(name);
             }, 500);
         }
-    };
+    }
 
-    // Optional: add a "Leaderboard" button in UI
+    // Color editor
+    function buildColorEditor() {
+        const rows = document.getElementById('colorEditorRows');
+        rows.innerHTML = '';
+        COLORS.forEach((c, i) => {
+            const row = document.createElement('div');
+            row.className = 'color-row';
+            row.innerHTML = `<span style="color:${c.hex}">${c.name}</span> <input type="color" value="${c.hex}" data-index="${i}">`;
+            rows.appendChild(row);
+        });
+        document.querySelectorAll('#colorEditorRows input').forEach(inp => {
+            inp.addEventListener('input', e => {
+                const idx = parseInt(e.target.dataset.index);
+                COLORS[idx].hex = e.target.value;
+                saveColors();
+                renderTubes();
+            });
+        });
+    }
+    document.getElementById('editColorsBtn').addEventListener('click', () => {
+        buildColorEditor();
+        document.getElementById('colorEditorOverlay').style.display = 'flex';
+    });
+    document.getElementById('closeColorEditor').addEventListener('click', () => {
+        document.getElementById('colorEditorOverlay').style.display = 'none';
+    });
+    document.getElementById('resetColorsBtn').addEventListener('click', () => {
+        COLORS = DEFAULT_COLORS.map(c => ({...c}));
+        saveColors();
+        renderTubes();
+    });
+
+    // Event listeners for game controls
+    document.getElementById('undoBtn').addEventListener('click', undoMove);
+    document.getElementById('restartBtn').addEventListener('click', restartPuzzle);
+    document.getElementById('newPuzzleBtn').addEventListener('click', () => loadPuzzle(newRandomSeed(), currentDifficulty));
+    document.getElementById('loadSeedBtn').addEventListener('click', () => {
+        let s = seedInput.value.trim() || newRandomSeed();
+        loadPuzzle(s, currentDifficulty);
+    });
+    document.getElementById('copySeedBtn').addEventListener('click', () => navigator.clipboard.writeText(currentSeed));
+    document.getElementById('difficultySelect').addEventListener('change', e => loadPuzzle(currentSeed, e.target.value));
+    document.getElementById('showLettersCheck').addEventListener('change', e => { showLetters = e.target.checked; renderTubes(); });
+
+    // Win overlay buttons
+    document.getElementById('winNewPuzzle').addEventListener('click', () => {
+        winOverlay.style.display = 'none';
+        loadPuzzle(newRandomSeed(), currentDifficulty);
+    });
+    document.getElementById('winRestart').addEventListener('click', () => {
+        winOverlay.style.display = 'none';
+        restartPuzzle();
+    });
+    document.getElementById('winCopySeed').addEventListener('click', () => navigator.clipboard.writeText(currentSeed));
+
+    // Leaderboard UI listeners
+    leaderboardBtn.addEventListener('click', showLeaderboard);
+    closeLeaderboardBtn.addEventListener('click', () => {
+        leaderboardOverlay.style.display = 'none';
+    });
+
+    // Start the game
+    loadPuzzle('neon-arcade', 'medium');
 </script>
 </body>
 </html>
